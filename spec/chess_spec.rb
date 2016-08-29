@@ -11,7 +11,9 @@ describe 'Game' do
       it 'will print out an 8x8 board' do
         expect{@a_game.draw_board}.to output(
 "┌───┬───┬───┬───┬───┬───┬───┬───┐
-│   │   │   │   │   │   │   │   │
+│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │
+├───┼───┼───┼───┼───┼───┼───┼───┤
+│ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │
 ├───┼───┼───┼───┼───┼───┼───┼───┤
 │   │   │   │   │   │   │   │   │
 ├───┼───┼───┼───┼───┼───┼───┼───┤
@@ -21,11 +23,9 @@ describe 'Game' do
 ├───┼───┼───┼───┼───┼───┼───┼───┤
 │   │   │   │   │   │   │   │   │
 ├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
+│ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │
 ├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
-├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
+│ ♖ │ ♘ │ ♗ │ ♕ │ ♔ │ ♗ │ ♘ │ ♖ │
 └───┴───┴───┴───┴───┴───┴───┴───┘"
 ).to_stdout
       end
@@ -54,10 +54,51 @@ describe 'Game' do
   describe '#place' do
     context 'when a piece, column and row is given to #place' do
       it 'finds that place on the grid and replaces it with piece' do
-@a_game.place('w_knight', 'f', 4)
+@a_game.place('♘', 'f', 4)
         expect(@a_game.row4).to eql('│   │   │   │   │   │ ♘ │   │   │')
       end
     end
   end
+
+  describe '#remove' do
+    context 'when a piece at a particular column and row is designated to move' do
+      it 'erases that piece from that column and row' do
+        @a_game.row5 = '│   │   │ ♗ │   │   │ ♘ │   │   │'
+@a_game.remove('f', 5)
+        expect(@a_game.row5).to eql('│   │   │ ♗ │   │   │   │   │   │')
+      end
+    end
+  end
+
+  describe '#find_piece' do
+    context 'when given a set of coordinates' do
+      it 'returns the string that corresponds' do
+      @a_game.row3 = '│   │   │ ♗ │   │   │ ♘ │   │   │'
+      expect(@a_game.find_piece('c', 3)).to eql('♗')
+      end
+    end
+  end
+        
+
+
+  describe '#move' do
+    context 'when two sets of coordinates are given' do
+      it 'erases the piece from the first set of coordinates' do
+      @a_game.row3 = '│   │   │ ♗ │   │   │ ♘ │   │   │'
+        @a_game.move('c', 3, 'd', 4)
+        expect(@a_game.row3).to eql('│   │   │   │   │   │ ♘ │   │   │')
+      end
+
+      it 'writes the piece to the second set of coordinates' do
+      @a_game.row3 = '│   │   │ ♗ │   │   │ ♘ │   │   │'
+        @a_game.move('c', 3, 'd', 4)
+        expect(@a_game.row4).to eql('│   │   │   │ ♗ │   │   │   │   │')
+      end
+    end
+  end
+
+
+
+        
 
 end

@@ -17,17 +17,26 @@ class ChessSymbols
 
 end
 
+class Player
+  attr_accessor :color, :victory
+  def initialize(color, victory = false)
+    @victory = victory
+    @color = color
+  end
+end
+
+
 class Game < ChessSymbols
-  attr_accessor :row8, :row7, :row6, :row5, :row4, :row3, :row2, :row1
+  attr_accessor :row8, :row7, :row6, :row5, :row4, :row3, :row2, :row1, :p1, :p2
   def initialize
-    @row8 = "│   │   │   │   │   │   │   │   │"
-    @row7 = "│   │   │   │   │   │   │   │   │"
+    @row8 = "│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │"
+    @row7 = "│ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │"
     @row6 = "│   │   │   │   │   │   │   │   │"
     @row5 = "│   │   │   │   │   │   │   │   │"
     @row4 = "│   │   │   │   │   │   │   │   │"
     @row3 = "│   │   │   │   │   │   │   │   │"
-    @row2 = "│   │   │   │   │   │   │   │   │"
-    @row1 = "│   │   │   │   │   │   │   │   │"
+    @row2 = "│ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │"
+    @row1 = "│ ♖ │ ♘ │ ♗ │ ♕ │ ♔ │ ♗ │ ♘ │ ♖ │"
     @mid_row = "├───┼───┼───┼───┼───┼───┼───┼───┤"
     @top_row = "┌───┬───┬───┬───┬───┬───┬───┬───┐"
     @bottom_row = "└───┴───┴───┴───┴───┴───┴───┴───┘"
@@ -45,6 +54,8 @@ class Game < ChessSymbols
   'b_knight' => "♞",
   'b_pawn' => "♟"
 }
+@p1 = Player.new('white')
+@p2 = Player.new('black')
   end
 
   def draw_board
@@ -91,12 +102,42 @@ class Game < ChessSymbols
     end
   end
 
-
-  def place(piece, col, row)
-    find_row(row)[find_col(col)] = @symbols[piece]
+  def find_piece(col, row)
+    find_row(row)[find_col(col)]
   end
 
+  def place(piece, col, row)
+    find_row(row)[find_col(col)] = piece
+  end
+
+  def remove(col, row)
+    find_row(row)[find_col(col)] = ' '
+  end
+
+  def move(col, row, to_col, to_row)
+    place(find_piece(col, row), to_col, to_row)
+    remove(col, row)
+  end
+
+  def start
+    count = 1
+    while p1.victory == false && p2.victory == false
+      draw_board
+      if count.odd?
+        print 'white turn, what is your move? '
+        turn = gets.chomp
+        move(turn[0], turn[1].to_i, turn[3], turn[4].to_i)
+      else
+        print 'black turn, what is your move? '
+        turn = gets.chomp
+        move(turn[0], turn[1].to_i, turn[3], turn[4].to_i)
+      end
+      count += 1
+    end
+  end
 end
+a = Game.new
+a.start
 
 =begin
 │ ─ ┌ ┐ └ ┘ ┬ ┴ ├ ┤ ┼
