@@ -132,16 +132,16 @@ class Game < ChessSymbols
     while i < 8 && condition == true #for cases to the rooks right
       if find_piece(col_ary[i], turn[1]) == ' '
         moves_ary << "#{col_ary[i]}#{turn[1]}"
-      elsif @b_symbols.values.include?(find_piece(col_ary[i], turn[1])) && find_piece(turn[0], turn[1]) == '♖'
+      elsif @b_symbols.values.include?(find_piece(col_ary[i], turn[1])) && @w_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
         moves_ary << "#{col_ary[i]}#{turn[1]}"
-      elsif @b_symbols.values.include?(find_piece(col_ary[i], turn[1])) && find_piece(turn[0], turn[1]) == '♜'
+      elsif @b_symbols.values.include?(find_piece(col_ary[i], turn[1])) && @b_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
 
-      elsif @w_symbols.values.include?(find_piece(col_ary[i], turn[1])) && find_piece(turn[0], turn[1]) == '♖'
+      elsif @w_symbols.values.include?(find_piece(col_ary[i], turn[1])) && @w_symbols.values.include?(find_piece(turn[0], turn[1]))
 
         condition = false
-      elsif @w_symbols.values.include?(find_piece(col_ary[i], turn[1])) && find_piece(turn[0], turn[1]) == '♜'
+      elsif @w_symbols.values.include?(find_piece(col_ary[i], turn[1])) && @b_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
         moves_ary << "#{col_ary[i]}#{turn[1]}"
       end
@@ -154,14 +154,14 @@ class Game < ChessSymbols
     while i >= 0 && condition == true#for cases to the rooks left
       if find_piece(col_ary[i], turn[1]) == ' '
         moves_ary << "#{col_ary[i]}#{turn[1]}"
-      elsif @b_symbols.values.include?(find_piece(col_ary[i], turn[1])) && find_piece(turn[0], turn[1]) == '♖'
+      elsif @b_symbols.values.include?(find_piece(col_ary[i], turn[1])) && @w_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
         moves_ary << "#{col_ary[i]}#{turn[1]}"
-      elsif @w_symbols.values.include?(find_piece(col_ary[i], turn[1])) && find_piece(turn[0], turn[1]) == '♖'
+      elsif @w_symbols.values.include?(find_piece(col_ary[i], turn[1])) && @w_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
-      elsif @b_symbols.values.include?(find_piece(col_ary[i], turn[1])) && find_piece(turn[0], turn[1]) == '♜'
+      elsif @b_symbols.values.include?(find_piece(col_ary[i], turn[1])) && @b_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
-      elsif @w_symbols.values.include?(find_piece(col_ary[i], turn[1])) && find_piece(turn[0], turn[1]) == '♜'
+      elsif @w_symbols.values.include?(find_piece(col_ary[i], turn[1])) && @b_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
         moves_ary << "#{col_ary[i]}#{turn[1]}"
       end
@@ -174,14 +174,14 @@ class Game < ChessSymbols
     while j < 8 && condition == true #for all possible cases of the rook moving up
       if find_piece(turn[0], row_ary[j]) == ' '
         moves_ary << "#{turn[0]}#{row_ary[j]}"
-      elsif @b_symbols.values.include?(find_piece(turn[0], row_ary[j])) && find_piece(turn[0], turn[1]) == '♖'
+      elsif @b_symbols.values.include?(find_piece(turn[0], row_ary[j])) && @w_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
         moves_ary << "#{turn[0]}#{row_ary[j]}"
-      elsif @w_symbols.values.include?(find_piece(turn[0], row_ary[j])) && find_piece(turn[0], turn[1]) == '♖'
+      elsif @w_symbols.values.include?(find_piece(turn[0], row_ary[j])) && @w_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
-      elsif @b_symbols.values.include?(find_piece(turn[0], row_ary[j])) && find_piece(turn[0], turn[1]) == '♜'
+      elsif @b_symbols.values.include?(find_piece(turn[0], row_ary[j])) && @b_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
-      elsif @w_symbols.values.include?(find_piece(turn[0], row_ary[j])) && find_piece(turn[0], turn[1]) == '♜'
+      elsif @w_symbols.values.include?(find_piece(turn[0], row_ary[j])) && @b_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
         moves_ary << "#{turn[0]}#{row_ary[j]}"
       end
@@ -194,14 +194,14 @@ class Game < ChessSymbols
     while j >= 0 && condition == true #for all possible movements of the rock going down
       if find_piece(turn[0], row_ary[j]) == ' '
         moves_ary << "#{turn[0]}#{row_ary[j]}"
-      elsif @b_symbols.values.include?(find_piece(turn[0], row_ary[j])) && find_piece(turn[0], turn[1]) == '♖'
+      elsif @b_symbols.values.include?(find_piece(turn[0], row_ary[j])) && @w_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
         moves_ary << "#{turn[0]}#{row_ary[j]}"
-      elsif @w_symbols.values.include?(find_piece(turn[0], row_ary[j])) && find_piece(turn[0], turn[1]) == '♖'
+      elsif @w_symbols.values.include?(find_piece(turn[0], row_ary[j])) && @w_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
-      elsif @b_symbols.values.include?(find_piece(turn[0], row_ary[j])) && find_piece(turn[0], turn[1]) == '♜'
+      elsif @b_symbols.values.include?(find_piece(turn[0], row_ary[j])) && @b_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
-      elsif @w_symbols.values.include?(find_piece(turn[0], row_ary[j])) && find_piece(turn[0], turn[1]) == '♜'
+      elsif @w_symbols.values.include?(find_piece(turn[0], row_ary[j])) && @b_symbols.values.include?(find_piece(turn[0], turn[1]))
         condition = false
         moves_ary << "#{turn[0]}#{row_ary[j]}"
       end
@@ -224,15 +224,15 @@ class Game < ChessSymbols
     while condition == true && c >= 0 && r < 8
       if find_piece(col_ary[c], row_ary[r]) == ' '
         moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♗' && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @w_symbols.values.include?(find_piece(turn[0], turn[1])) && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
-      elsif find_piece(turn[0], turn[1]) == '♗' && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
-        condition = false
-        moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♝' && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @w_symbols.values.include?(find_piece(turn[0], turn[1])) && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
         moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♝' && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @b_symbols.values.include?(find_piece(turn[0], turn[1])) && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+        condition = false
+        moves_ary << "#{col_ary[c]}#{row_ary[r]}"
+      elsif @b_symbols.values.include?(find_piece(turn[0], turn[1])) && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
       end
       c -= 1
@@ -247,15 +247,15 @@ class Game < ChessSymbols
     while condition == true && c < 8 && r < 8
       if find_piece(col_ary[c], row_ary[r]) == ' '
         moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♗' && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @w_symbols.values.include?(find_piece(turn[0], turn[1])) && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
-      elsif find_piece(turn[0], turn[1]) == '♗' && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
-        condition = false
-        moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♝' && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @w_symbols.values.include?(find_piece(turn[0], turn[1])) && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
         moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♝' && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @b_symbols.values.include?(find_piece(turn[0], turn[1])) && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+        condition = false
+        moves_ary << "#{col_ary[c]}#{row_ary[r]}"
+      elsif @b_symbols.values.include?(find_piece(turn[0], turn[1])) && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
       end
       c += 1
@@ -270,15 +270,15 @@ class Game < ChessSymbols
     while condition == true && c >= 0 && r >= 0
       if find_piece(col_ary[c], row_ary[r]) == ' '
         moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♗' && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @w_symbols.values.include?(find_piece(turn[0], turn[1])) && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
-      elsif find_piece(turn[0], turn[1]) == '♗' && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
-        condition = false
-        moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♝' && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @w_symbols.values.include?(find_piece(turn[0], turn[1])) && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
         moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♝' && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @b_symbols.values.include?(find_piece(turn[0], turn[1])) && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+        condition = false
+        moves_ary << "#{col_ary[c]}#{row_ary[r]}"
+      elsif @b_symbols.values.include?(find_piece(turn[0], turn[1])) && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
       end
       c -= 1
@@ -293,15 +293,15 @@ class Game < ChessSymbols
     while condition == true && c < 8 && r >= 0
       if find_piece(col_ary[c], row_ary[r]) == ' '
         moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♗' && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @w_symbols.values.include?(find_piece(turn[0], turn[1])) && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
-      elsif find_piece(turn[0], turn[1]) == '♗' && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
-        condition = false
-        moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♝' && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @w_symbols.values.include?(find_piece(turn[0], turn[1])) && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
         moves_ary << "#{col_ary[c]}#{row_ary[r]}"
-      elsif find_piece(turn[0], turn[1]) == '♝' && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+      elsif @b_symbols.values.include?(find_piece(turn[0], turn[1])) && @w_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
+        condition = false
+        moves_ary << "#{col_ary[c]}#{row_ary[r]}"
+      elsif @b_symbols.values.include?(find_piece(turn[0], turn[1])) && @b_symbols.values.include?(find_piece(col_ary[c], row_ary[r]))
         condition = false
       end
       c += 1
@@ -310,23 +310,77 @@ class Game < ChessSymbols
     moves_ary
   end
     
+  def queen_moves(turn)
+    rook_moves(turn) + bishop_moves(turn)
+  end
+  
+  def is_white(turn)
+    if @w_symbols.values.include?(find_piece(turn[0], turn[1]))
+      return true
+    else
+      return false
+    end
+  end
+
+  def king_moves(turn)
+    moves_ary = []
+    col_ary = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    row_ary = [1, 2, 3, 4, 5, 6, 7, 8]
+
+    condition = true
+    c = col_ary.index(turn[0])
+    r = row_ary.index(turn[1].to_i)
+    #possible moves towards top left
+    if find_piece(col_ary[c-1], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r+1]}"))
+        moves_ary << "#{col_ary[c-1]}#{row_ary[r+1]}"
+    end
+    #moves up
+    if find_piece(col_ary[c], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c]}#{row_ary[r+1]}"))
+        moves_ary << "#{col_ary[c]}#{row_ary[r+1]}"
+    end
+    #moves top right
+    if find_piece(col_ary[c+1], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r+1]}"))
+        moves_ary << "#{col_ary[c+1]}#{row_ary[r+1]}"
+    end
+    #moves right
+    if find_piece(col_ary[c+1], row_ary[r]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r]}"))
+        moves_ary << "#{col_ary[c+1]}#{row_ary[r]}"
+    end
+    #moves bottom right
+    if find_piece(col_ary[c+1], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r-1]}"))
+        moves_ary << "#{col_ary[c+1]}#{row_ary[r-1]}"
+    end
+    #moves down
+    if find_piece(col_ary[c], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c]}#{row_ary[r-1]}"))
+        moves_ary << "#{col_ary[c]}#{row_ary[r-1]}"
+    end
+    #moves bottom left
+    if find_piece(col_ary[c-1], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r-1]}"))
+        moves_ary << "#{col_ary[c-1]}#{row_ary[r-1]}"
+    end
+    #moves left
+    if find_piece(col_ary[c-1], row_ary[r]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r]}"))
+        moves_ary << "#{col_ary[c-1]}#{row_ary[r]}"
+    end
+    moves_ary
+
+  end
 
   def possible_moves(turn)
         case find_piece(turn[0], turn[1])
-
           #rook_moves
         when '♖' || '♜' then return rook_moves(turn)
-        when '♗'
           #bishop_moves
+        when '♗' 
 
-        when '♕'
           #queen_moves
-        when '♔'
+        when '♕'
           #king_moves
-        when '♘'
+        when '♔'
           #knight_moves
-        when '♙'
+        when '♘'
           #pawn_moves
+        when '♙'
           #if on row 2 it can move two spaces
           #if a piece is diagonal to it, it can take it
           #if it gets to the end it can become a queen

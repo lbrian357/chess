@@ -173,14 +173,58 @@ describe 'Game' do
       context 'when selected starting coordinate is a queen' do
         it 'will show all possible moves (diagonal and horizontal)' do
         @a_game.row8 = '│   │   │   │   │   │   │   │   │'
-        @a_game.row7 = '│   │ ♕ │   │   │   │   │   │   │'
+        @a_game.row7 = '│   │ ♕ │   │   │ ♖ │   │   │   │'
         @a_game.row6 = '│   │   │   │   │   │   │   │   │'
         @a_game.row5 = '│   │   │   │   │   │   │   │   │'
-        @a_game.row4 = '│   │   │   │   │ ♖ │   │   │   │'
-        expect(@a_game.queen_moves('b7')).to match_array(['a8', 'c8', 'c6', 'a6', 'd5'])
+        @a_game.row4 = '│   │ ♖ │   │   │ ♖ │   │   │   │'
+        expect(@a_game.queen_moves('b7')).to match_array(['a8', 'c8', 'c6', 'a6', 'd5', 'a7', 'c7', 'd7', 'b8', 'b6', 'b5'])
+        end
+
+        it 'will show all possible moves (diagonal and horizontal)' do
+        @a_game.row8 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row7 = '│   │ ♕ │   │   │ ♜ │   │   │   │'
+        @a_game.row6 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row5 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row4 = '│   │ ♜ │   │   │ ♜ │   │   │   │'
+        expect(@a_game.queen_moves('b7')).to match_array(['a8', 'c8', 'c6', 'a6', 'd5', 'a7', 'c7', 'd7', 'b8', 'b6', 'b5', 'b4', 'e4', 'e7'])
         end
       end
     end
+
+    describe '#king_moves' do
+      context 'when selected piece is the king' do
+        it 'will show all possible moves 1 square in all directions' do
+        @a_game.row6 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row5 = '│   │   │ ♔ │   │   │   │   │   │'
+        @a_game.row4 = '│   │   │   │   │   │   │   │   │'
+        expect(@a_game.king_moves('c5')).to match_array(['d6', 'd5', 'd4', 'c6', 'c4', 'b4', 'b5', 'b6'])
+        end
+
+        it 'cannot move where another piece is' do
+        @a_game.row6 = '│   │ ♖ │ ♖ │ ♖ │   │   │   │   │'
+        @a_game.row5 = '│   │   │ ♔ │ ♖ │   │   │   │   │'
+        @a_game.row4 = '│   │ ♖ │ ♖ │   │   │   │   │   │'
+        expect(@a_game.king_moves('c5')).to match_array(['b5', 'd4'])
+        end
+
+        it 'can, however, move to occupied coordinates if it is of opposite color' do
+        @a_game.row6 = '│   │ ♖ │ ♜ │ ♖ │   │   │   │   │'
+        @a_game.row5 = '│   │   │ ♔ │ ♖ │   │   │   │   │'
+        @a_game.row4 = '│   │ ♜ │ ♖ │   │   │   │   │   │'
+        expect(@a_game.king_moves('c5')).to match_array(['b5', 'd4', 'c6', 'b4'])
+        end
+      end
+      
+    end
+
+    describe '#is_white' do
+        context 'when given a coordinate' do 
+          it 'returns true if that coordinate contains a white piece' do
+        @a_game.row5 = '│   │   │ ♔ │ ♖ │   │   │   │   │'
+            expect(@a_game.is_white('c5')).to eql(true)
+          end
+        end
+      end
 
   end
 
