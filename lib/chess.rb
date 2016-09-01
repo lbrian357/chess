@@ -580,23 +580,19 @@ class Game < ChessSymbols
   def possible_moves(turn)
     case find_piece(turn[0], turn[1])
       #rook_moves
-    when '♖' || '♜' then return rook_moves(turn)
+    when '♖', '♜' then return rook_moves(turn)
       #bishop_moves
-    when '♗' 
+    when '♗', '♝' then return bishop_moves(turn)
 
       #queen_moves
-    when '♕'
+    when '♕', '♛' then return queen_moves(turn)
       #king_moves
-    when '♔'
+    when '♔', '♚' then return king_moves(turn)
       #knight_moves
-    when '♘'
+    when '♘', '♞' then return knight_moves(turn)
       #pawn_moves
-    when '♙'
-      #if on row 2 it can move two spaces
-      #if a piece is diagonal to it, it can take it
-      #if it gets to the end it can become a queen
+    when '♙', '♟' then return pawn_moves(turn)
     end
-
   end
 
 
@@ -605,30 +601,42 @@ class Game < ChessSymbols
     while p1.victory == false && p2.victory == false
       draw_board
       if count.odd?
-        print 'white turn, what is your move? '
+        rules_followed = false
+        begin 
+        print "\nwhite turn, what is your move? "
         turn = gets.chomp.gsub(/\s+/, "")
 
-        if possible_moves.include?(turn[-2..-1])
+        if is_white(turn) && possible_moves(turn).include?(turn[-2..-1])
           @past_moves << turn
-
-
-
           move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+          rules_followed = true
+        else
+          puts "D'OH. You can't do that, try again."
         end
+
+        end until rules_followed
 
       else
-        print 'black turn, what is your move? '
+        rules_followed = false
+        begin 
+        print "\nblack turn, what is your move? "
         turn = gets.chomp.gsub(/\s+/, "")
-        if possible_moves.include?(turn[-2..-1])
+        if is_black(turn) && possible_moves(turn).include?(turn[-2..-1])
+          @past_moves << turn
           move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+          rules_followed = true
+        else
+          puts "D'OH. You can't do that, try again."
         end
+
+        end until rules_followed
       end
       count += 1
     end
   end
 end
-#a = Game.new
-#a.start
+a = Game.new
+a.start
 
 =begin
 │ ─ ┌ ┐ └ ┘ ┬ ┴ ├ ┤ ┼
