@@ -309,11 +309,11 @@ class Game < ChessSymbols
     end
     moves_ary
   end
-    
+
   def queen_moves(turn)
     rook_moves(turn) + bishop_moves(turn)
   end
-  
+
   def is_white(turn)
     if @w_symbols.values.include?(find_piece(turn[0], turn[1]))
       return true
@@ -327,64 +327,167 @@ class Game < ChessSymbols
     col_ary = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     row_ary = [1, 2, 3, 4, 5, 6, 7, 8]
 
-    condition = true
     c = col_ary.index(turn[0])
     r = row_ary.index(turn[1].to_i)
     #possible moves towards top left
-    if find_piece(col_ary[c-1], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r+1]}"))
-        moves_ary << "#{col_ary[c-1]}#{row_ary[r+1]}"
+    if c-1 >= 0 && c-1 < 8 && r+1 >= 0 && r+1 < 8
+      if find_piece(col_ary[c-1], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r+1]}")) 
+        moves_ary << "#{col_ary[c-1]}#{row_ary[r+1]}" 
+      end
     end
     #moves up
-    if find_piece(col_ary[c], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c]}#{row_ary[r+1]}"))
+    if c >= 0 && c < 8 && r+1 >= 0 && r+1 < 8
+      if find_piece(col_ary[c], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c]}#{row_ary[r+1]}"))
         moves_ary << "#{col_ary[c]}#{row_ary[r+1]}"
+      end
     end
     #moves top right
-    if find_piece(col_ary[c+1], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r+1]}"))
+    if c+1 >= 0 && c+1 < 8 && r+1 >= 0 && r+1 < 8
+      if find_piece(col_ary[c+1], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r+1]}"))
         moves_ary << "#{col_ary[c+1]}#{row_ary[r+1]}"
+      end
     end
     #moves right
-    if find_piece(col_ary[c+1], row_ary[r]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r]}"))
+    if c+1 >= 0 && c+1 < 8 && r >= 0 && r < 8
+      if find_piece(col_ary[c+1], row_ary[r]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r]}"))
         moves_ary << "#{col_ary[c+1]}#{row_ary[r]}"
+      end
     end
     #moves bottom right
-    if find_piece(col_ary[c+1], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r-1]}"))
+    if c+1 >= 0 && c+1 < 8 && r-1 >= 0 && r-1 < 8
+      if find_piece(col_ary[c+1], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r-1]}"))
         moves_ary << "#{col_ary[c+1]}#{row_ary[r-1]}"
+      end
     end
     #moves down
-    if find_piece(col_ary[c], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c]}#{row_ary[r-1]}"))
+    if c >= 0 && c < 8 && r-1 >= 0 && r-1 < 8
+      if find_piece(col_ary[c], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c]}#{row_ary[r-1]}"))
         moves_ary << "#{col_ary[c]}#{row_ary[r-1]}"
+      end
     end
     #moves bottom left
-    if find_piece(col_ary[c-1], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r-1]}"))
+    if c-1 >= 0 && c-1 < 8 && r-1 >= 0 && r-1 < 8
+      if find_piece(col_ary[c-1], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r-1]}"))
         moves_ary << "#{col_ary[c-1]}#{row_ary[r-1]}"
+      end
     end
     #moves left
-    if find_piece(col_ary[c-1], row_ary[r]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r]}"))
+    if c-1 >= 0 && c-1 < 8 && r >= 0 && r < 8
+      if find_piece(col_ary[c-1], row_ary[r]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r]}"))
         moves_ary << "#{col_ary[c-1]}#{row_ary[r]}"
+      end
     end
     moves_ary
-
   end
 
-  def possible_moves(turn)
-        case find_piece(turn[0], turn[1])
-          #rook_moves
-        when '♖' || '♜' then return rook_moves(turn)
-          #bishop_moves
-        when '♗' 
+  def valid_move?(ca, ra)
+    if find_piece(ca, ra) == ' ' || (is_white(turn) && !is_white("#{ca}#{ra}")) || (!is_white(turn) && is_white("#{ca}#{ra}"))
+      return true
+    else
+      return false
+    end
+  end
 
-          #queen_moves
-        when '♕'
-          #king_moves
-        when '♔'
-          #knight_moves
-        when '♘'
-          #pawn_moves
-        when '♙'
-          #if on row 2 it can move two spaces
-          #if a piece is diagonal to it, it can take it
-          #if it gets to the end it can become a queen
-        end
+  def knight_moves(turn)
+    moves_ary = []
+    col_ary = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    row_ary = [1, 2, 3, 4, 5, 6, 7, 8]
+
+    c = col_ary.index(turn[0])
+    r = row_ary.index(turn[1].to_i)
+    #moves up left
+    ca = c - 1
+    ra = r + 2
+    if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+      if valid_move?(col_ary[ca], row_ary[ra])
+        moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+      end
+    end
+
+    #moves up right
+    ca = c + 1
+    ra = r + 2
+    if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+      if valid_move?(col_ary[ca], row_ary[ra])
+        moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+      end
+    end
+
+    #moves right up
+    ca = c + 2
+    ra = r + 1
+    if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+      if valid_move?(col_ary[ca], row_ary[ra])
+        moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+      end
+    end
+    #moves right down
+    ca = c + 2
+    ra = r - 1
+    if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+      if valid_move?(col_ary[ca], row_ary[ra])
+        moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+      end
+    end
+    #moves down right
+    ca = c + 1
+    ra = r - 2
+    if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+      if valid_move?(col_ary[ca], row_ary[ra])
+        moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+      end
+    end
+    #moves down left
+    ca = c - 1
+    ra = r - 2
+    if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+      if valid_move?(col_ary[ca], row_ary[ra])
+        moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+      end
+    end
+    #moves left down
+    ca = c - 2
+    ra = r - 1
+    if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+      if valid_move?(col_ary[ca], row_ary[ra])
+        moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+      end
+    end
+    #moves left up
+    ca = c - 2
+    ra = r + 1
+    if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+      if valid_move?(col_ary[ca], row_ary[ra])
+        moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+      end
+    end
+    moves_ary
+  end
+
+  def pawn_moves
+  end
+
+
+
+  def possible_moves(turn)
+    case find_piece(turn[0], turn[1])
+      #rook_moves
+    when '♖' || '♜' then return rook_moves(turn)
+      #bishop_moves
+    when '♗' 
+
+      #queen_moves
+    when '♕'
+      #king_moves
+    when '♔'
+      #knight_moves
+    when '♘'
+      #pawn_moves
+    when '♙'
+      #if on row 2 it can move two spaces
+      #if a piece is diagonal to it, it can take it
+      #if it gets to the end it can become a queen
+    end
 
   end
 
@@ -396,20 +499,20 @@ class Game < ChessSymbols
       if count.odd?
         print 'white turn, what is your move? '
         turn = gets.chomp.gsub(/\s+/, "")
-        
-          if possible_moves.include?(turn[-2..-1])
+
+        if possible_moves.include?(turn[-2..-1])
 
 
 
-        move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
-          end
+          move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+        end
 
       else
         print 'black turn, what is your move? '
         turn = gets.chomp.gsub(/\s+/, "")
-          if possible_moves.include?(turn[-2..-1])
-        move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
-          end
+        if possible_moves.include?(turn[-2..-1])
+          move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+        end
       end
       count += 1
     end
