@@ -265,7 +265,117 @@ describe 'Game' do
         @a_game.row1 = '│   │   │   │   │   │   │   │   │'
         expect(@a_game.knight_moves('a8')).to match_array(['c7', 'b6'])  
       end
+
+      it 'works for black knights as well' do
+        @a_game.row8 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row7 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row6 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row5 = '│ ♞ │   │   │   │   │   │   │   │'
+        @a_game.row4 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row3 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row2 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row1 = '│   │   │   │   │   │   │   │   │'
+        expect(@a_game.knight_moves('a5')).to match_array(['b7', 'b3', 'c6', 'c4'])  
+      end
+
     end
+  end
+
+  describe '#pawn_moves' do
+    context 'when disginated piece is a white pawn' do 
+      it 'gives array of its movement choice' do
+        @a_game.row8 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row7 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row6 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row5 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row4 = '│ ♙ │   │   │   │   │   │   │   │'
+        @a_game.row3 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row2 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row1 = '│   │   │   │   │   │   │   │   │'
+        expect(@a_game.pawn_moves('a4')).to match_array(['a5'])  
+      end
+
+      it 'can move forward two squares if it is on row 2 for white' do
+        expect(@a_game.pawn_moves('e2')).to match_array(['e3', 'e4'])
+      end
+
+      it 'can move diagonally 1 square to the right if those squares have opposite colored pieces on them' do
+        @a_game.row3 = '│   │   │   │   │   │ ♟ │   │   │'
+        expect(@a_game.pawn_moves('e2')).to match_array(['e3', 'e4', 'f3'])
+      end
+      
+      it 'can move diagonally 1 square to the left if that square has a different colored piece on it' do
+        @a_game.row3 = '│   │   │   │   │   │ ♟ │   │   │'
+        expect(@a_game.pawn_moves('g2')).to match_array(['g3', 'g4', 'f3'])
+      end
+    end
+
+    context 'when disginated piece is a black pawn' do 
+      it 'gives array of its movement choice' do
+        @a_game.row8 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row7 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row6 = '│   │   │   │ ♟ │   │   │   │   │'
+        @a_game.row5 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row4 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row3 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row2 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row1 = '│   │   │   │   │   │   │   │   │'
+        expect(@a_game.pawn_moves('d6')).to match_array(['d5'])  
+      end
+
+      it 'can move forward two squares if it is on row 7 for black' do
+        expect(@a_game.pawn_moves('e7')).to match_array(['e6', 'e5'])
+      end
+
+      it 'can move diagonally 1 square to the right if that square has an opposite colored piece on it' do
+        @a_game.row6 = '│   │   │   │   │   │ ♙ │   │   │'
+        expect(@a_game.pawn_moves('e7')).to match_array(['e6', 'e5', 'f6'])
+      end
+
+      it 'can move diagonally 1 square to the left if that square has a different colored piece on it' do
+        @a_game.row6 = '│   │   │   │   │   │ ♙ │   │   │'
+        expect(@a_game.pawn_moves('g7')).to match_array(['g6', 'g5', 'f6'])
+      end
+    end
+
+    context 'when the caveat en passant is a possibility' do
+      it 'allows a white pawn to take a black pawn to its left right after the black pawn moves two spaces forward' do
+        @a_game.past_moves = ['e7e5']
+        @a_game.row8 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row7 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row6 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row5 = '│   │   │   │   │ ♟ │ ♙ │   │ ♙ │'
+        expect(@a_game.pawn_moves('f5')).to match_array(['f6', 'e6'])
+      end
+
+      it 'allows a white pawn to take a black pawn to its right after the black pawn moves two spaces forward' do
+        @a_game.past_moves = ['e7e5']
+        @a_game.row8 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row7 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row6 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row5 = '│   │   │   │ ♙ │ ♟ │   │   │ ♙ │'
+        expect(@a_game.pawn_moves('d5')).to match_array(['d6', 'e6'])
+      end
+
+      it 'allows a black pawn to take a white pawn on its left after the white pawn moves two spaces forward from row2' do
+        @a_game.past_moves = ['f2f4']
+        @a_game.row4 = '│   │   │   │   │   │ ♙ │ ♟ │ ♙ │'
+        @a_game.row3 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row2 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row1 = '│   │   │   │   │   │   │   │   │'
+        expect(@a_game.pawn_moves('g4')).to match_array(['g3', 'f3'])
+      end
+
+      it 'allows a black pawn to take a white pawn on its right, after the white pawn moves two spaces forward from row2' do
+        @a_game.past_moves = ['f2f4']
+        @a_game.row4 = '│   │   │   │   │ ♟ │ ♙ │   │ ♙ │'
+        @a_game.row3 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row2 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row1 = '│   │   │   │   │   │   │   │   │'
+        expect(@a_game.pawn_moves('e4')).to match_array(['e3', 'f3'])
+      end
+    end
+
   end
 
 end

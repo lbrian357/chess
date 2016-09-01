@@ -27,7 +27,7 @@ end
 
 
 class Game < ChessSymbols
-  attr_accessor :row8, :row7, :row6, :row5, :row4, :row3, :row2, :row1, :p1, :p2
+  attr_accessor :row8, :row7, :row6, :row5, :row4, :row3, :row2, :row1, :p1, :p2, :past_moves
   def initialize
     @row8 = "│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │"
     @row7 = "│ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │"
@@ -58,6 +58,7 @@ class Game < ChessSymbols
     }
     @p1 = Player.new('white')
     @p2 = Player.new('black')
+    @past_moves = []
   end
 
   def draw_board
@@ -317,8 +318,12 @@ class Game < ChessSymbols
   def is_white(turn)
     if @w_symbols.values.include?(find_piece(turn[0], turn[1]))
       return true
-    else
-      return false
+    end
+  end
+
+  def is_black(turn)
+    if @b_symbols.values.include?(find_piece(turn[0], turn[1]))
+      return true
     end
   end
 
@@ -331,49 +336,49 @@ class Game < ChessSymbols
     r = row_ary.index(turn[1].to_i)
     #possible moves towards top left
     if c-1 >= 0 && c-1 < 8 && r+1 >= 0 && r+1 < 8
-      if find_piece(col_ary[c-1], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r+1]}")) 
+      if find_piece(col_ary[c-1], row_ary[r+1]) == ' ' || (is_white(turn) && is_black("#{col_ary[c-1]}#{row_ary[r+1]}")) || (is_black(turn) && is_white("#{col_ary[c-1]}#{row_ary[r+1]}")) 
         moves_ary << "#{col_ary[c-1]}#{row_ary[r+1]}" 
       end
     end
     #moves up
     if c >= 0 && c < 8 && r+1 >= 0 && r+1 < 8
-      if find_piece(col_ary[c], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c]}#{row_ary[r+1]}"))
+      if find_piece(col_ary[c], row_ary[r+1]) == ' ' || (is_white(turn) && is_black("#{col_ary[c]}#{row_ary[r+1]}")) || (is_black(turn) && is_white("#{col_ary[c]}#{row_ary[r+1]}"))
         moves_ary << "#{col_ary[c]}#{row_ary[r+1]}"
       end
     end
     #moves top right
     if c+1 >= 0 && c+1 < 8 && r+1 >= 0 && r+1 < 8
-      if find_piece(col_ary[c+1], row_ary[r+1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r+1]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r+1]}"))
+      if find_piece(col_ary[c+1], row_ary[r+1]) == ' ' || (is_white(turn) && is_black("#{col_ary[c+1]}#{row_ary[r+1]}")) || (is_black(turn) && is_white("#{col_ary[c+1]}#{row_ary[r+1]}"))
         moves_ary << "#{col_ary[c+1]}#{row_ary[r+1]}"
       end
     end
     #moves right
     if c+1 >= 0 && c+1 < 8 && r >= 0 && r < 8
-      if find_piece(col_ary[c+1], row_ary[r]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r]}"))
+      if find_piece(col_ary[c+1], row_ary[r]) == ' ' || (is_white(turn) && is_black("#{col_ary[c+1]}#{row_ary[r]}")) || (is_black(turn) && is_white("#{col_ary[c+1]}#{row_ary[r]}"))
         moves_ary << "#{col_ary[c+1]}#{row_ary[r]}"
       end
     end
     #moves bottom right
     if c+1 >= 0 && c+1 < 8 && r-1 >= 0 && r-1 < 8
-      if find_piece(col_ary[c+1], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c+1]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c+1]}#{row_ary[r-1]}"))
+      if find_piece(col_ary[c+1], row_ary[r-1]) == ' ' || (is_white(turn) && is_black("#{col_ary[c+1]}#{row_ary[r-1]}")) || (is_black(turn) && is_white("#{col_ary[c+1]}#{row_ary[r-1]}"))
         moves_ary << "#{col_ary[c+1]}#{row_ary[r-1]}"
       end
     end
     #moves down
     if c >= 0 && c < 8 && r-1 >= 0 && r-1 < 8
-      if find_piece(col_ary[c], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c]}#{row_ary[r-1]}"))
+      if find_piece(col_ary[c], row_ary[r-1]) == ' ' || (is_white(turn) && is_black("#{col_ary[c]}#{row_ary[r-1]}")) || (is_black(turn) && is_white("#{col_ary[c]}#{row_ary[r-1]}"))
         moves_ary << "#{col_ary[c]}#{row_ary[r-1]}"
       end
     end
     #moves bottom left
     if c-1 >= 0 && c-1 < 8 && r-1 >= 0 && r-1 < 8
-      if find_piece(col_ary[c-1], row_ary[r-1]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r-1]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r-1]}"))
+      if find_piece(col_ary[c-1], row_ary[r-1]) == ' ' || (is_white(turn) && is_black("#{col_ary[c-1]}#{row_ary[r-1]}")) || (is_black(turn) && is_white("#{col_ary[c-1]}#{row_ary[r-1]}"))
         moves_ary << "#{col_ary[c-1]}#{row_ary[r-1]}"
       end
     end
     #moves left
     if c-1 >= 0 && c-1 < 8 && r >= 0 && r < 8
-      if find_piece(col_ary[c-1], row_ary[r]) == ' ' || (is_white(turn) && !is_white("#{col_ary[c-1]}#{row_ary[r]}")) || (!is_white(turn) && is_white("#{col_ary[c-1]}#{row_ary[r]}"))
+      if find_piece(col_ary[c-1], row_ary[r]) == ' ' || (is_white(turn) && is_black("#{col_ary[c-1]}#{row_ary[r]}")) || (is_black(turn) && is_white("#{col_ary[c-1]}#{row_ary[r]}"))
         moves_ary << "#{col_ary[c-1]}#{row_ary[r]}"
       end
     end
@@ -381,7 +386,7 @@ class Game < ChessSymbols
   end
 
   def valid_move?(ca, ra)
-    if find_piece(ca, ra) == ' ' || (is_white(turn) && !is_white("#{ca}#{ra}")) || (!is_white(turn) && is_white("#{ca}#{ra}"))
+    if find_piece(ca, ra) == ' ' || (is_white(turn) && is_black("#{ca}#{ra}")) || (is_black(turn) && is_white("#{ca}#{ra}"))
       return true
     else
       return false
@@ -464,8 +469,111 @@ class Game < ChessSymbols
     moves_ary
   end
 
-  def pawn_moves
+  def pawn_moves(turn)
+    moves_ary = []
+    col_ary = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    row_ary = [1, 2, 3, 4, 5, 6, 7, 8]
+
+    c = col_ary.index(turn[0])
+    r = row_ary.index(turn[1].to_i)
+    #moves forward for white
+    if is_white(turn)
+      ca = c
+      ra = r + 1
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if find_piece(col_ary[ca], row_ary[ra]) == ' '
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+        end
+        #if it is on row2 and is a white piece and there is nothing blocking the pawn it can move two squares forward
+        if r == 1 && is_white(turn) && find_piece(col_ary[ca], row_ary[ra]) == ' ' && find_piece(col_ary[ca], row_ary[ra + 1]) == ' '
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra + 1]}"
+        end
+      end
+      #diagonal right take a black piece
+      ca = c + 1
+      ra = r + 1
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if is_black("#{col_ary[ca]}#{row_ary[ra]}")  
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+        end
+      end
+      #diagonal left take a black piece
+      ca = c - 1
+      ra = r + 1
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if is_black("#{col_ary[ca]}#{row_ary[ra]}")  
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+        end
+      end
+    #white check for en_passant to its left
+      ca = c - 1
+      ra = r
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if r == 4 && find_piece(col_ary[ca], row_ary[ra]) == '♟' && @past_moves[-1] == "#{col_ary[ca]}#{row_ary[ra+2]}#{col_ary[ca]}#{row_ary[ra]}"
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra + 1]}"
+        end
+      end
+    #white check for en_passant to its right
+      ca = c + 1
+      ra = r
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if r == 4 && find_piece(col_ary[ca], row_ary[ra]) == '♟' && @past_moves[-1] == "#{col_ary[ca]}#{row_ary[ra+2]}#{col_ary[ca]}#{row_ary[ra]}"
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra + 1]}"
+        end
+      end
+
+    elsif is_black(turn)
+      ca = c
+      ra = r - 1
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if find_piece(col_ary[ca], row_ary[ra]) == ' '
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+        end
+        #if it is on row2 and is a white piece and there is nothing blocking the pawn it can move two squares forward
+        if r == 6 && is_black(turn) && find_piece(col_ary[ca], row_ary[ra]) == ' ' && find_piece(col_ary[ca], row_ary[ra - 1]) == ' '
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra - 1]}"
+        end
+      end
+      #diagonal right take a white piece
+      ca = c + 1
+      ra = r - 1
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if is_white("#{col_ary[ca]}#{row_ary[ra]}")  
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+        end
+      end
+      #diagonal left take a white piece
+      ca = c - 1
+      ra = r - 1
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if is_white("#{col_ary[ca]}#{row_ary[ra]}")  
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
+        end
+      end
+
+    #black check for en_passant to its left
+      ca = c - 1
+      ra = r
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if r == 3 && find_piece(col_ary[ca], row_ary[ra]) == '♙' && @past_moves[-1] == "#{col_ary[ca]}#{row_ary[ra-2]}#{col_ary[ca]}#{row_ary[ra]}"
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra - 1]}"
+        end
+      end
+    #black check for en_passant to its right
+      ca = c + 1
+      ra = r
+      if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
+        if r == 3 && find_piece(col_ary[ca], row_ary[ra]) == '♙' && @past_moves[-1] == "#{col_ary[ca]}#{row_ary[ra-2]}#{col_ary[ca]}#{row_ary[ra]}"
+          moves_ary << "#{col_ary[ca]}#{row_ary[ra - 1]}"
+        end
+      end
+
+    end
+    moves_ary
   end
+
+
+
 
 
 
@@ -501,6 +609,7 @@ class Game < ChessSymbols
         turn = gets.chomp.gsub(/\s+/, "")
 
         if possible_moves.include?(turn[-2..-1])
+          @past_moves << turn
 
 
 
