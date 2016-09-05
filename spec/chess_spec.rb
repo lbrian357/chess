@@ -124,6 +124,15 @@ describe 'Game' do
         expect(@a_game.rook_moves('f3')).to match_array(['g3', 'h3', 'e3', 'f2', 'f4', 'f1'])
       end
 
+      it 'includes coordinates of all black pieces in all directions' do
+        @a_game.row5 = '│   │   │   │   │   │ ♟ │   │   │'
+        @a_game.row4 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row3 = '│   │   │   │ ♟ │   │ ♖ │   │ ♟ │'
+        @a_game.row2 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row1 = '│   │   │   │   │   │ ♟ │   │   │'
+        expect(@a_game.rook_moves('f3')).to match_array(['g3', 'h3', 'd3', 'e3', 'f2', 'f4', 'f1', 'f5'])
+      end
+
       it 'works for black pieces as well' do 
         @a_game.row5 = '│   │   │   │   │   │ ♞ │   │   │'
         @a_game.row4 = '│   │   │   │   │   │   │   │   │'
@@ -375,8 +384,56 @@ describe 'Game' do
         expect(@a_game.pawn_moves('e4')).to match_array(['e3', 'f3'])
       end
     end
-
   end
+
+  describe '#all_white_moves' do
+    context 'given the color white' do
+    it 'returns array with all possible moves of all white pieces' do
+        @a_game.row8 = "│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │"  
+        @a_game.row7 = "│ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │" 
+        @a_game.row6 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row5 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row4 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row3 = '│ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │' 
+        @a_game.row2 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row1 = '│ ♖ │ ♘ │ ♗ │ ♕ │ ♔ │ ♗ │ ♘ │ ♖ │'
+        expect(@a_game.all_moves('white')).to match_array(['a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2', 'a4', 'b4', 'c4', 'd4', 'e4', 'f4', 'g4', 'h4'])
+    end
+    end
+
+    context 'given the color black' do
+    it 'returns array with all possible moves of all white pieces' do
+        @a_game.row8 = "│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │"  
+        @a_game.row7 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row6 = '│ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │'
+        @a_game.row5 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row4 = '│   │   │   │   │   │   │   │   │'
+        @a_game.row3 = '│   │   │   │   │   │   │   │   │' 
+        @a_game.row2 = '│ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │'
+        @a_game.row1 = '│ ♖ │ ♘ │ ♗ │ ♕ │ ♔ │ ♗ │ ♘ │ ♖ │'
+        expect(@a_game.all_moves('black')).to match_array(['a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7', 'a5', 'b5', 'c5', 'd5', 'e5', 'f5', 'g5', 'h5'])
+    end
+    end
+  end
+  
+  describe '#check?' do
+    context 'when an piece on the opposing side can take the king' do
+      it 'will let the user know it is in check' do
+        @a_game.row8 = "│   │   │   │   │ ♚ │   │   │   │" 
+        @a_game.row7 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row6 = "│   │   │   │   │   │ ♟ │   │   │" 
+        @a_game.row5 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row4 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row3 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row2 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row1 = "│   │   │   │ ♔ │ ♖ │   │   │   │" 
+        expect(@a_game.check?('black')).to eql(true)
+      end
+    end
+  end
+
+
+      
 
 end
 

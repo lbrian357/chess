@@ -385,8 +385,8 @@ class Game < ChessSymbols
     moves_ary
   end
 
-  def valid_move?(ca, ra)
-    if find_piece(ca, ra) == ' ' || (is_white(turn) && is_black("#{ca}#{ra}")) || (is_black(turn) && is_white("#{ca}#{ra}"))
+  def valid_move?(c, r, ca, ra)
+    if find_piece(ca, ra) == ' ' || (is_white("#{c}#{r}") && is_black("#{ca}#{ra}")) || (is_black("#{c}#{r}") && is_white("#{ca}#{ra}"))
       return true
     else
       return false
@@ -404,7 +404,7 @@ class Game < ChessSymbols
     ca = c - 1
     ra = r + 2
     if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
-      if valid_move?(col_ary[ca], row_ary[ra])
+      if valid_move?(col_ary[c], row_ary[r], col_ary[ca], row_ary[ra])
         moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
       end
     end
@@ -413,7 +413,7 @@ class Game < ChessSymbols
     ca = c + 1
     ra = r + 2
     if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
-      if valid_move?(col_ary[ca], row_ary[ra])
+      if valid_move?(col_ary[c], row_ary[r], col_ary[ca], row_ary[ra])
         moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
       end
     end
@@ -422,7 +422,7 @@ class Game < ChessSymbols
     ca = c + 2
     ra = r + 1
     if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
-      if valid_move?(col_ary[ca], row_ary[ra])
+      if valid_move?(col_ary[c], row_ary[r], col_ary[ca], row_ary[ra])
         moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
       end
     end
@@ -430,7 +430,7 @@ class Game < ChessSymbols
     ca = c + 2
     ra = r - 1
     if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
-      if valid_move?(col_ary[ca], row_ary[ra])
+      if valid_move?(col_ary[c], row_ary[r], col_ary[ca], row_ary[ra])
         moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
       end
     end
@@ -438,7 +438,7 @@ class Game < ChessSymbols
     ca = c + 1
     ra = r - 2
     if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
-      if valid_move?(col_ary[ca], row_ary[ra])
+      if valid_move?(col_ary[c], row_ary[r], col_ary[ca], row_ary[ra])
         moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
       end
     end
@@ -446,7 +446,7 @@ class Game < ChessSymbols
     ca = c - 1
     ra = r - 2
     if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
-      if valid_move?(col_ary[ca], row_ary[ra])
+      if valid_move?(col_ary[c], row_ary[r], col_ary[ca], row_ary[ra])
         moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
       end
     end
@@ -454,7 +454,7 @@ class Game < ChessSymbols
     ca = c - 2
     ra = r - 1
     if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
-      if valid_move?(col_ary[ca], row_ary[ra])
+      if valid_move?(col_ary[c], row_ary[r], col_ary[ca], row_ary[ra])
         moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
       end
     end
@@ -462,7 +462,7 @@ class Game < ChessSymbols
     ca = c - 2
     ra = r + 1
     if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
-      if valid_move?(col_ary[ca], row_ary[ra])
+      if valid_move?(col_ary[c], row_ary[r], col_ary[ca], row_ary[ra])
         moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
       end
     end
@@ -505,7 +505,7 @@ class Game < ChessSymbols
           moves_ary << "#{col_ary[ca]}#{row_ary[ra]}"
         end
       end
-    #white check for en_passant to its left
+      #white check for en_passant to its left
       ca = c - 1
       ra = r
       if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
@@ -513,7 +513,7 @@ class Game < ChessSymbols
           moves_ary << "#{col_ary[ca]}#{row_ary[ra + 1]}"
         end
       end
-    #white check for en_passant to its right
+      #white check for en_passant to its right
       ca = c + 1
       ra = r
       if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
@@ -551,7 +551,7 @@ class Game < ChessSymbols
         end
       end
 
-    #black check for en_passant to its left
+      #black check for en_passant to its left
       ca = c - 1
       ra = r
       if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
@@ -559,7 +559,7 @@ class Game < ChessSymbols
           moves_ary << "#{col_ary[ca]}#{row_ary[ra - 1]}"
         end
       end
-    #black check for en_passant to its right
+      #black check for en_passant to its right
       ca = c + 1
       ra = r
       if ca >= 0 && ca < 8 && ra >= 0 && ra < 8
@@ -572,18 +572,12 @@ class Game < ChessSymbols
     moves_ary
   end
 
-
-
-
-
-
   def possible_moves(turn)
     case find_piece(turn[0], turn[1])
       #rook_moves
     when '♖', '♜' then return rook_moves(turn)
       #bishop_moves
     when '♗', '♝' then return bishop_moves(turn)
-
       #queen_moves
     when '♕', '♛' then return queen_moves(turn)
       #king_moves
@@ -595,6 +589,70 @@ class Game < ChessSymbols
     end
   end
 
+  def all_moves(color)
+    @all_white_moves = []
+    @all_black_moves = []
+    col_ary = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    row_ary = [1, 2, 3, 4, 5, 6, 7, 8]
+
+    row_ary.each do |row|
+      col_ary.each do |col|
+        if is_white("#{col}#{row}")
+          @all_white_moves << possible_moves("#{col}#{row}")
+        elsif is_black("#{col}#{row}")
+          @all_black_moves << possible_moves("#{col}#{row}")
+        end
+      end
+    end
+
+    if color == 'white'
+      return @all_white_moves.flatten.uniq
+    elsif color == 'black'
+      return @all_black_moves.flatten.uniq
+    end
+  end
+
+  def check?(color)
+    #find the king
+    white_check = false
+    black_check = false
+    col_ary = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    row_ary = [1, 2, 3, 4, 5, 6, 7, 8]
+    w_king = ''
+    b_king = ''
+
+    row_ary.each do |row|
+      col_ary.each do |col|
+        if find_piece(col, row) == '♔'
+          w_king = "#{col}#{row}"
+        end
+        if find_piece(col, row) == '♚'
+          b_king = "#{col}#{row}"
+        end
+      end
+    end
+
+    if color == 'white'
+      if all_moves('black').include?(w_king)
+        return true
+      end
+    elsif color == 'black'
+      if all_moves('white').include?(b_king)
+        return true
+      end
+    else
+      return false
+    end
+
+  end
+
+
+
+
+
+
+
+
 
   def start
     count = 1
@@ -603,31 +661,37 @@ class Game < ChessSymbols
       if count.odd?
         rules_followed = false
         begin 
-        print "\nwhite turn, what is your move? "
-        turn = gets.chomp.gsub(/\s+/, "")
+          print "\nwhite turn, what is your move? "
+          turn = gets.chomp.gsub(/\s+/, "")
 
-        if is_white(turn) && possible_moves(turn).include?(turn[-2..-1])
-          @past_moves << turn
-          move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
-          rules_followed = true
-        else
-          puts "D'OH. You can't do that, try again."
-        end
+          if is_white(turn) && possible_moves(turn).include?(turn[-2..-1])
+            @past_moves << turn
+            move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+            rules_followed = true
+            if check?('black')
+              puts "black you've been checked"
+            end
+          else
+            puts "D'OH. You can't do that, try again."
+          end
 
         end until rules_followed
 
       else
         rules_followed = false
         begin 
-        print "\nblack turn, what is your move? "
-        turn = gets.chomp.gsub(/\s+/, "")
-        if is_black(turn) && possible_moves(turn).include?(turn[-2..-1])
-          @past_moves << turn
-          move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
-          rules_followed = true
-        else
-          puts "D'OH. You can't do that, try again."
-        end
+          print "\nblack turn, what is your move? "
+          turn = gets.chomp.gsub(/\s+/, "")
+          if is_black(turn) && possible_moves(turn).include?(turn[-2..-1])
+            @past_moves << turn
+            move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+            rules_followed = true
+            if check?('white')
+              puts "white you've been checked"
+            end
+          else
+            puts "D'OH. You can't do that, try again."
+          end
 
         end until rules_followed
       end
@@ -637,25 +701,3 @@ class Game < ChessSymbols
 end
 a = Game.new
 a.start
-
-=begin
-│ ─ ┌ ┐ └ ┘ ┬ ┴ ├ ┤ ┼
-
-┌───┬───┬───┬───┬───┬───┬───┬───┐
-│   │   │   │   │   │   │   │   │
-├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
-├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
-├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
-├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
-├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
-├───┼───┼───┼───┼───┼───┼───┼───┤
-│ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │
-├───┼───┼───┼───┼───┼───┼───┼───┤
-│   │   │   │   │   │   │   │   │
-└───┴───┴───┴───┴───┴───┴───┴───┘
-=end
