@@ -14,7 +14,6 @@ class ChessSymbols
     @b_knight = "♞"
     @b_pawn = "♟"
   end
-
 end
 
 class Player
@@ -25,18 +24,35 @@ class Player
   end
 end
 
+class Node
+  attr_accessor :value, :parent, :child
+  def initialize(value = nil, parent = nil, *child)
+    @value = value
+    @parent = parent
+    @child = child
+  end
+end
+
 
 class Game < ChessSymbols
   attr_accessor :row8, :row7, :row6, :row5, :row4, :row3, :row2, :row1, :p1, :p2, :past_moves
-  def initialize
-    @row8 = "│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │"
-    @row7 = "│ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │"
-    @row6 = "│   │   │   │   │   │   │   │   │"
-    @row5 = "│   │   │   │   │   │   │   │   │"
-    @row4 = "│   │   │   │   │   │   │   │   │"
-    @row3 = "│   │   │   │   │   │   │   │   │"
-    @row2 = "│ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │"
-    @row1 = "│ ♖ │ ♘ │ ♗ │ ♕ │ ♔ │ ♗ │ ♘ │ ♖ │"
+  def initialize(
+    row8 = "│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │", 
+    row7 = "│ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │", 
+    row6 = "│   │   │   │   │   │   │   │   │", 
+    row5 = "│   │   │   │   │   │   │   │   │", 
+    row4 = "│   │   │   │   │   │   │   │   │", 
+    row3 = "│   │   │   │   │   │   │   │   │", 
+    row2 = "│ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │ ♙ │", 
+    row1 = "│ ♖ │ ♘ │ ♗ │ ♕ │ ♔ │ ♗ │ ♘ │ ♖ │")
+    @row8 = row8
+    @row7 = row7
+    @row6 = row6
+    @row5 = row5
+    @row4 = row4
+    @row3 = row3
+    @row2 = row2
+    @row1 = row1
     @mid_row = "├───┼───┼───┼───┼───┼───┼───┼───┤"
     @top_row = "┌───┬───┬───┬───┬───┬───┬───┬───┐"
     @bottom_row = "└───┴───┴───┴───┴───┴───┴───┴───┘"
@@ -118,8 +134,8 @@ class Game < ChessSymbols
   end
 
   def move(col, row, to_col, to_row)
-    place(find_piece(col, row), to_col, to_row)
-    remove(col, row)
+    place(find_piece(col, row.to_i), to_col, to_row.to_i)
+    remove(col, row.to_i)
   end
 
   def rook_moves(turn)
@@ -643,7 +659,64 @@ class Game < ChessSymbols
     else
       return false
     end
+  end
 
+  def next_moves(color)
+    w_head = Node.new(Game.new(row8, row7, row6, row5, row4, row3, row2, row1))
+    b_head = Node.new(Game.new(row8, row7, row6, row5, row4, row3, row2, row1))
+
+    col_ary = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+    row_ary = [1, 2, 3, 4, 5, 6, 7, 8]
+
+    row_ary.each do |row|
+      col_ary.each do |col|
+        
+        if is_white("#{col}#{row}")
+          possible_moves("#{col}#{row}").each do |a_move|
+=begin
+          p row8
+          p row7
+          p row6
+          p row5
+          p row4
+          p row3
+          p row2
+          p row1
+          p ''
+=end
+            current_position = Game.new(row8, row7, row6, row5, row4, row3, row2, row1)
+            current_position.move(col, row, a_move[0], a_move[1])
+            p current_position.row8
+            p current_position.row7
+            p current_position.row6
+            p current_position.row5
+            p current_position.row4
+            p current_position.row3
+            p current_position.row2
+            p current_position.row1
+            p ''
+            w_head.child << Node.new(current_position, w_head)
+            current_position.move(a_move[0], a_move[1], col, row)
+          end
+=begin
+        elsif is_black("#{col}#{row}")
+          possible_moves("#{col}#{row}").each do |a_move|
+            current_position = Game.new(row8, row7, row6, row5, row4, row3, row2, row1)
+            tmp = Node.new(current_position.move(col, row, a_move[0], a_move[1]), b_head)
+            tmp.parent = b_head
+            b_head.child << tmp
+          end
+=end
+        end
+      end
+    end
+          p w_head.child
+
+    if color == 'white'
+      return w_head
+    elsif color == 'black'
+      return b_head
+    end
   end
 
 
@@ -699,5 +772,5 @@ class Game < ChessSymbols
     end
   end
 end
-a = Game.new
-a.start
+#a = Game.new
+#a.start

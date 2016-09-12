@@ -102,7 +102,7 @@ describe 'Game' do
       it 'will create an array with all possible legal moves to the right' do
         @a_game.row4 = '│   │   │   │   │   │ ♘ │   │   │'
         @a_game.row3 = '│   │   │   │   │ ♘ │ ♖ │   │   │'
-        @a_game.row2 = '│   │   │   │   │   │ ♘ │   │   │'
+        @a_game.row2 = '│   │   │   │   │   │ ♔ │   │   │'
         expect(@a_game.rook_moves('f3')).to eql(['g3', 'h3'])
       end
 
@@ -431,6 +431,22 @@ describe 'Game' do
       end
     end
   end
+  
+  describe '#next_moves' do
+    it 'builds a tree of all the possible moves for white at that point of the game' do
+        @a_game.row8 = "│   │   │   │   │   │ ♚ │   │   │" 
+        @a_game.row7 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row6 = "│   │   │   │   │   │ ♟ │   │   │" 
+        @a_game.row5 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row4 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row3 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row2 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row1 = "│   │   │   │ ♔ │ ♖ │   │   │   │" 
+        expect(@a_game.next_moves('white').child.length).to eql(14)
+    end
+  end
+
+
 
 
       
