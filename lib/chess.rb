@@ -34,7 +34,7 @@ class Node
 end
 
 
-class Game < ChessSymbols
+class Game 
   attr_accessor :row8, :row7, :row6, :row5, :row4, :row3, :row2, :row1, :p1, :p2, :past_moves
   def initialize(
     row8 = "│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │", 
@@ -184,7 +184,6 @@ class Game < ChessSymbols
       end
       i -= 1
     end
-
     j = row_ary.index(turn[1].to_i) #remember to turn all turn[1].to_i
     j = j + 1
     condition = true
@@ -204,7 +203,6 @@ class Game < ChessSymbols
       end
       j += 1
     end
-
     j = row_ary.index(turn[1].to_i)
     j = j - 1
     condition = true
@@ -223,7 +221,6 @@ class Game < ChessSymbols
         moves_ary << "#{turn[0]}#{row_ary[j]}"
       end
       j -= 1
-
     end
     moves_ary
   end
@@ -661,6 +658,7 @@ class Game < ChessSymbols
     end
   end
 
+
   def next_moves(color)
     w_head = Node.new(Game.new(row8, row7, row6, row5, row4, row3, row2, row1))
     b_head = Node.new(Game.new(row8, row7, row6, row5, row4, row3, row2, row1))
@@ -670,47 +668,35 @@ class Game < ChessSymbols
 
     row_ary.each do |row|
       col_ary.each do |col|
-        
+
         if is_white("#{col}#{row}")
           possible_moves("#{col}#{row}").each do |a_move|
-=begin
-          p row8
-          p row7
-          p row6
-          p row5
-          p row4
-          p row3
-          p row2
-          p row1
-          p ''
-=end
-            current_position = Game.new(row8, row7, row6, row5, row4, row3, row2, row1)
-            current_position.move(col, row, a_move[0], a_move[1])
-            p current_position.row8
-            p current_position.row7
-            p current_position.row6
-            p current_position.row5
-            p current_position.row4
-            p current_position.row3
-            p current_position.row2
-            p current_position.row1
-            p ''
-            w_head.child << Node.new(current_position, w_head)
-            current_position.move(a_move[0], a_move[1], col, row)
+            @ro8 = row8.dup
+            @ro7 = row7.dup
+            @ro6 = row6.dup
+            @ro5 = row5.dup
+            @ro4 = row4.dup
+            @ro3 = row3.dup
+            @ro2 = row2.dup
+            @ro1 = row1.dup
+            w_head.child << Node.new(GameInstance.new(@ro8, @ro7, @ro6, @ro5, @ro4, @ro3, @ro2, @ro1).some_move(col, row, a_move[0], a_move[1]), w_head)
+
           end
-=begin
         elsif is_black("#{col}#{row}")
           possible_moves("#{col}#{row}").each do |a_move|
-            current_position = Game.new(row8, row7, row6, row5, row4, row3, row2, row1)
-            tmp = Node.new(current_position.move(col, row, a_move[0], a_move[1]), b_head)
-            tmp.parent = b_head
-            b_head.child << tmp
+            @ro8 = row8.dup
+            @ro7 = row7.dup
+            @ro6 = row6.dup
+            @ro5 = row5.dup
+            @ro4 = row4.dup
+            @ro3 = row3.dup
+            @ro2 = row2.dup
+            @ro1 = row1.dup
+            b_head.child << Node.new(GameInstance.new(@ro8, @ro7, @ro6, @ro5, @ro4, @ro3, @ro2, @ro1).some_move(col, row, a_move[0], a_move[1]), w_head)
           end
-=end
         end
       end
     end
-          p w_head.child
 
     if color == 'white'
       return w_head
@@ -719,12 +705,25 @@ class Game < ChessSymbols
     end
   end
 
-
-
-
-
-
-
+  def in_check?(color)
+    black_in_check = false
+    white_in_check = false
+    if color == 'white'
+      next_moves('black').child.each do |node|
+        if node.value.check?('white')
+          white_in_check = true
+        end
+      end
+      return black_in_check
+    elsif color == 'black'
+      next_moves('white').child.each do |node|
+        if node.value.check?('black')
+          white_in_check = true
+        end
+      end
+      return white_in_check
+    end
+  end
 
 
   def start
@@ -772,5 +771,85 @@ class Game < ChessSymbols
     end
   end
 end
+
+
+class GameInstance 
+  attr_accessor :rw8, :rw7, :rw6, :rw5, :rw4, :rw3, :rw2, :rw1
+  def initialize(rw8, rw7, rw6, rw5, rw4, rw3, rw2, rw1)
+    @rw8 = rw8
+    @rw7 = rw7
+    @rw6 = rw6
+    @rw5 = rw5
+    @rw4 = rw4
+    @rw3 = rw3
+    @rw2 = rw2
+    @rw1 = rw1
+  end
+
+
+  def rfind_col(col)
+    if col == 'a'
+      return 2
+    elsif col == 'b'
+      return 6
+    elsif col == 'c'
+      return 10
+    elsif col == 'd'
+      return 14
+    elsif col == 'e'
+      return 18
+    elsif col == 'f'
+      return 22
+    elsif col == 'g'
+      return 26
+    elsif col == 'h'
+      return 30
+    end
+  end
+
+  def rfind_row(number)
+    if number == 1
+      return rw1
+    elsif number == 2
+      return rw2
+    elsif number == 3
+      return rw3 
+    elsif number == 4
+      return rw4
+    elsif number == 5
+      return rw5
+    elsif number == 6
+      return rw6
+    elsif number == 7
+      return rw7
+    elsif number == 8
+      return rw8
+    end
+  end
+
+  def rfind_piece(col, row)
+    rfind_row(row.to_i)[rfind_col(col)]
+  end
+
+  def rplace(piece, col, row)
+    rfind_row(row.to_i)[rfind_col(col)] = piece
+  end
+
+  def rremove(col, row)
+    rfind_row(row)[rfind_col(col)] = ' '
+  end
+
+  def rmove(col, row, to_col, to_row)
+    rplace(rfind_piece(col, row.to_i), to_col, to_row.to_i)
+    rremove(col, row.to_i)
+  end
+
+  def some_move(col, row, to_col, to_row)
+    rmove(col, row, to_col, to_row)
+    return Game.new(rw8, rw7, rw6, rw5, rw4, rw3, rw2, rw1)
+  end
+end
+
+
 #a = Game.new
 #a.start

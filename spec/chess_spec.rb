@@ -431,7 +431,8 @@ describe 'Game' do
       end
     end
   end
-  
+
+
   describe '#next_moves' do
     it 'builds a tree of all the possible moves for white at that point of the game' do
         @a_game.row8 = "│   │   │   │   │   │ ♚ │   │   │" 
@@ -443,6 +444,46 @@ describe 'Game' do
         @a_game.row2 = "│   │   │   │   │   │   │   │   │" 
         @a_game.row1 = "│   │   │   │ ♔ │ ♖ │   │   │   │" 
         expect(@a_game.next_moves('white').child.length).to eql(14)
+    end
+
+    it 'creates a tree that iterates through all the possible moves' do
+        @a_game.row8 = "│   │   │   │   │   │ ♚ │   │   │" 
+        @a_game.row7 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row6 = "│   │   │   │   │   │ ♟ │   │   │" 
+        @a_game.row5 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row4 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row3 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row2 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row1 = "│   │   │   │ ♔ │ ♖ │   │   │   │" 
+        expect(@a_game.next_moves('white').child[0].value.row2).to eql("│   │   │ ♔ │   │   │   │   │   │" )
+    end
+
+    it 'creates a tree for black pieces' do 
+        @a_game.row8 = "│   │   │   │   │   │ ♚ │   │   │" 
+        @a_game.row7 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row6 = "│   │   │   │   │   │ ♟ │   │   │" 
+        @a_game.row5 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row4 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row3 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row2 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row1 = "│   │   │   │ ♔ │ ♖ │   │   │   │" 
+        expect(@a_game.next_moves('black').child.length).to eql(6)
+    end
+  end
+
+  describe '#checkmate?' do
+    context 'when black is in checkmate' do
+      it 'returns true' do
+        @a_game.row8 = "│   │   │   │ ♖ │   │   │ ♚ │   │" 
+        @a_game.row7 = "│   │   │   │   │   │ ♟ │ ♟ │ ♟ │" 
+        @a_game.row6 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row5 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row4 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row3 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row2 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row1 = "│   │   │   │ ♔ │   │   │   │   │" 
+        expect(@a_game.checkmate?('black')).to eql(true)
+      end
     end
   end
 
