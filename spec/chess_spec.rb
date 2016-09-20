@@ -485,6 +485,34 @@ describe 'Game' do
         expect(@a_game.checkmate?('black')).to eql(true)
       end
     end
+
+    context 'when white is in checkmate' do
+      it 'returns true' do
+        @a_game.row8 = "│   │   │   │   │   │   │ ♚ │   │" 
+        @a_game.row7 = "│   │   │   │   │   │ ♟ │   │   │" 
+        @a_game.row6 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row5 = "│   │   │ ♖ │   │   │   │   │   │" 
+        @a_game.row4 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row3 = "│   │   │   │   │   │   │ ♟ │ ♟ │" 
+        @a_game.row2 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row1 = "│   │   │   │ ♛ │   │   │   │ ♔ │" 
+        expect(@a_game.checkmate?('white')).to eql(true)
+      end
+    end
+
+    context 'when white is not in checkmate' do
+      it 'returns false' do
+        @a_game.row8 = "│   │   │   │   │   │   │ ♚ │   │" 
+        @a_game.row7 = "│   │   │   │   │   │ ♟ │   │   │" 
+        @a_game.row6 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row5 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row4 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row3 = "│   │   │   │   │   │   │ ♟ │ ♟ │" 
+        @a_game.row2 = "│   │   │   │   │   │   │   │   │" 
+        @a_game.row1 = "│ ♖ │   │   │ ♛ │   │   │   │ ♔ │" 
+        expect(@a_game.checkmate?('white')).to eql(false)
+      end
+    end
   end
 
 

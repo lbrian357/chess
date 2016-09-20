@@ -705,23 +705,23 @@ class Game
     end
   end
 
-  def in_check?(color)
-    black_in_check = false
-    white_in_check = false
+  def checkmate?(color)
+    black_checkmate = true
+    white_checkmate = true
     if color == 'white'
-      next_moves('black').child.each do |node|
-        if node.value.check?('white')
-          white_in_check = true
-        end
-      end
-      return black_in_check
-    elsif color == 'black'
       next_moves('white').child.each do |node|
-        if node.value.check?('black')
-          white_in_check = true
+        unless node.value.check?('white')
+          white_checkmate = false
         end
       end
-      return white_in_check
+      return white_checkmate
+    elsif color == 'black'
+      next_moves('black').child.each do |node|
+        unless node.value.check?('black')
+          black_checkmate = false
+        end
+      end
+      return black_checkmate
     end
   end
 
