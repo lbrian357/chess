@@ -737,10 +737,26 @@ class Game
           turn = gets.chomp.gsub(/\s+/, "")
 
           if is_white(turn) && possible_moves(turn).include?(turn[-2..-1])
-            @past_moves << turn
-            move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
-            rules_followed = true
-            if check?('black')
+            if check?('white')
+              a = Game.new(row8.dup, row7.dup, row6.dup, row5.dup, row4.dup, row3.dup, row2.dup, row1.dup)
+              a.move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+              unless a.check?('white')
+                move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i) 
+                @past_moves << turn
+                rules_followed = true
+              else
+                puts "White you're in check. You can't do that, try again."
+              end
+            else
+              move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+              rules_followed = true
+              @past_moves << turn
+            end
+            if checkmate?('black')
+              draw_board
+              puts 'checkmate, white wins'
+              p1.victory = true
+            elsif check?('black')
               puts "black you've been checked"
             end
           else
@@ -755,10 +771,26 @@ class Game
           print "\nblack turn, what is your move? "
           turn = gets.chomp.gsub(/\s+/, "")
           if is_black(turn) && possible_moves(turn).include?(turn[-2..-1])
-            @past_moves << turn
-            move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
-            rules_followed = true
-            if check?('white')
+            if check?('black')
+              a = Game.new(row8.dup, row7.dup, row6.dup, row5.dup, row4.dup, row3.dup, row2.dup, row1.dup)
+              a.move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+              unless a.check?('black')
+                move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i) 
+                @past_moves << turn
+                rules_followed = true
+              else
+                puts "Black, you're in check. You can't do that, try again."
+              end
+            else
+              @past_moves << turn
+              move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
+              rules_followed = true
+            end
+            if checkmate?('white')
+              draw_board
+              puts 'checkmate, black wins'
+              p1.victory = true
+            elsif check?('white')
               puts "white you've been checked"
             end
           else
@@ -851,5 +883,5 @@ class GameInstance
 end
 
 
-#a = Game.new
-#a.start
+a = Game.new
+a.start
