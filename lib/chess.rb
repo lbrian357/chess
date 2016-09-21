@@ -1,3 +1,5 @@
+require 'yaml'
+=begin
 class ChessSymbols
   attr_accessor :w_king, :w_queen, :w_rook, :w_bishop, :w_pawn, :b_king, :b_queen, :b_rook, :b_bishop, :b_knight, :b_pawn
   def initialize
@@ -15,6 +17,7 @@ class ChessSymbols
     @b_pawn = "♟"
   end
 end
+=end
 
 class Player
   attr_accessor :color, :victory
@@ -35,7 +38,7 @@ end
 
 
 class Game 
-  attr_accessor :row8, :row7, :row6, :row5, :row4, :row3, :row2, :row1, :p1, :p2, :past_moves
+  attr_accessor :row8, :row7, :row6, :row5, :row4, :row3, :row2, :row1, :p1, :p2, :past_moves, :count
   def initialize(
     row8 = "│ ♜ │ ♞ │ ♝ │ ♛ │ ♚ │ ♝ │ ♞ │ ♜ │", 
     row7 = "│ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │ ♟ │", 
@@ -75,6 +78,7 @@ class Game
     @p1 = Player.new('white')
     @p2 = Player.new('black')
     @past_moves = []
+    @count = 1
   end
 
   def draw_board
@@ -725,9 +729,20 @@ class Game
     end
   end
 
+  def save_game(state)
+    yaml = YAML::dump state
+    game_file = File.open('./saved.yaml', 'w')
+    game_file.write yaml
+    game_file.close
+  end
+
+  def load_game
+    game_file = File.open('./saved.yaml')
+    yaml = game_file.read
+    YAML::load yaml
+  end
 
   def start
-    count = 1
     while p1.victory == false && p2.victory == false
       draw_board
       if count.odd?
@@ -735,6 +750,25 @@ class Game
         begin 
           print "\nwhite turn, what is your move? "
           turn = gets.chomp.gsub(/\s+/, "")
+          if turn == 'save'
+            self.save_game(self)
+            rules_followed = true
+          elsif turn == 'load'
+            self.load_game
+            
+    @row8 = load_game.row8
+    @row7 = load_game.row7
+    @row6 = load_game.row6
+    @row5 = load_game.row5
+    @row4 = load_game.row4
+    @row3 = load_game.row3
+    @row2 = load_game.row2
+    @row1 = load_game.row1
+    @past_moves = load_game.past_moves
+    @count = load_game.count
+    rules_followed = true
+          else
+
 
           if is_white(turn) && possible_moves(turn).include?(turn[-2..-1])
             if check?('white')
@@ -744,6 +778,7 @@ class Game
                 move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i) 
                 @past_moves << turn
                 rules_followed = true
+                @count = @count + 1
               else
                 puts "White you're in check. You can't do that, try again."
               end
@@ -751,6 +786,8 @@ class Game
               move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
               rules_followed = true
               @past_moves << turn
+
+                @count = @count + 1
             end
             if checkmate?('black')
               draw_board
@@ -763,6 +800,7 @@ class Game
             puts "D'OH. You can't do that, try again."
           end
 
+          end
         end until rules_followed
 
       else
@@ -770,6 +808,25 @@ class Game
         begin 
           print "\nblack turn, what is your move? "
           turn = gets.chomp.gsub(/\s+/, "")
+
+          if turn == 'save'
+            self.save_game(self)
+            rules_followed = true
+          elsif turn == 'load'
+            self.load_game
+
+    @row8 = load_game.row8
+    @row7 = load_game.row7
+    @row6 = load_game.row6
+    @row5 = load_game.row5
+    @row4 = load_game.row4
+    @row3 = load_game.row3
+    @row2 = load_game.row2
+    @row1 = load_game.row1
+    @past_moves = load_game.past_moves
+    @count = load_game.count
+    rules_followed = true
+          else
           if is_black(turn) && possible_moves(turn).include?(turn[-2..-1])
             if check?('black')
               a = Game.new(row8.dup, row7.dup, row6.dup, row5.dup, row4.dup, row3.dup, row2.dup, row1.dup)
@@ -777,12 +834,14 @@ class Game
               unless a.check?('black')
                 move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i) 
                 @past_moves << turn
+                @count = @count + 1
                 rules_followed = true
               else
                 puts "Black, you're in check. You can't do that, try again."
               end
             else
               @past_moves << turn
+                @count = @count + 1
               move(turn[0], turn[1].to_i, turn[-2], turn[-1].to_i)
               rules_followed = true
             end
@@ -797,11 +856,13 @@ class Game
             puts "D'OH. You can't do that, try again."
           end
 
+          end
         end until rules_followed
       end
-      count += 1
     end
   end
+
+
 end
 
 
